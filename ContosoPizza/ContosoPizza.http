@@ -1,0 +1,6 @@
+@ContosoPizza_HostAddress = https://localhost:7232
+
+
+GET {{ContosoPizza_HostAddress}}/api/pizza
+
+###
