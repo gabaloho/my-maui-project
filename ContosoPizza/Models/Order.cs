@@ -1,7 +1,14 @@
-﻿namespace ContosoPizza.Models
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+namespace ContosoPizza.Models
 {
+    [Collection("orders")]
     public class Order
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         public int Id { get; set; }
         public int CustomerId { get; set; }
         public Customer? Customer { get; set; }

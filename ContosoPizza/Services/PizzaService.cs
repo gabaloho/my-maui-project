@@ -1,54 +1,125 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using ContosoPizza.Services;
+using ContosoPizza.Models;
 
 namespace ContosoPizza.Services
 {
-    public static class PizzaService
+    public class PizzaService : IPizzaService
     {
-        public static List<Models.Pizza> GetPizzas()
+        private readonly ContosoPizzaDbContext _context;
+        public PizzaService(ContosoPizzaDbContext context)
         {
-            return new List<Models.Pizza>
-            {
-                new Models.Pizza
-                {
-                    Id = 1,
-                    Name = "Margherita",
-                    Description = "Classic pizza with tomato sauce, mozzarella cheese, and fresh basil.",
-                    Price = 8.99m,
-                    ImageUrl = "https://example.com/margherita.jpg",
-                    IsGlutenFree = false,
-                    IsVegetarian = true,
-                    IsVegan = false
-                },
-                new Models.Pizza
-                {
-                    Id = 2,
-                    Name = "Pepperoni",
-                    Description = "Spicy pepperoni slices with mozzarella cheese and tomato sauce.",
-                    Price = 9.99m,
-                    ImageUrl = "https://example.com/pepperoni.jpg",
-                    IsGlutenFree = false,
-                    IsVegetarian = false,
-                    IsVegan = false
-                },
-
-                new Models.Pizza
-                {
-                    Id = 3,
-                    Name = "BBQ Chicken",
-                    Description = "Grilled chicken, BBQ sauce, red onions, and cilantro.",
-                    Price = 10.99m,
-                    ImageUrl= "https://example.com/bbqchicken.jpg",
-                    IsGlutenFree = false,
-                    IsVegetarian = false,
-                    IsVegan = false
-                }
-            };
+            _context = context;
         }
 
-        public static Models.Pizza? GetPizzaById(int id)
+        public void AddPizza(Pizza pizza)
         {
-            var pizzas = GetPizzas();
-            return pizzas.FirstOrDefault(p => p.Id == id);
+            _context.Pizzas.Add(pizza);
+            _context.SaveChanges();
+        }
+
+        public void GetPizzasAsync(Pizza pizza)
+        {
+            _context.Pizzas.Add(pizza);
+            _context.SaveChanges();
+        }
+
+
+        public Pizza GetPizzaByIdAsync(int id)
+        {
+            var pizza = _context.Pizzas.Find(id);
+            if (pizza == null)
+            {
+                throw new KeyNotFoundException($"Pizza with ID {id} not found.");
+            }
+            return pizza;
+        }
+
+        public void CreatePizzaAsync(Pizza pizza)
+        {
+            _context.Pizzas.Add(pizza);
+            _context.SaveChanges();
+        }
+
+        public void UpdatePizzaAsync(int id, Pizza pizza)
+        {
+            var existingPizza = _context.Pizzas.Find(id);
+            if (existingPizza == null)
+            {
+                throw new KeyNotFoundException($"Pizza with ID {id} not found.");
+            }
+
+            existingPizza.Name = pizza.Name;
+            existingPizza.Description = pizza.Description;
+            existingPizza.Price = pizza.Price;
+            existingPizza.ImageUrl = pizza.ImageUrl;
+            existingPizza.IsGlutenFree = pizza.IsGlutenFree;
+            existingPizza.IsVegetarian = pizza.IsVegetarian;
+            existingPizza.IsVegan = pizza.IsVegan;
+
+            _context.SaveChanges();
+        }
+
+        public void DeletePizzaAsync(int id)
+        {
+            var pizza = _context.Pizzas.Find(id);
+            if (pizza == null)
+            {
+                throw new KeyNotFoundException($"Pizza with ID {id} not found.");
+            }
+
+            _context.Pizzas.Remove(pizza);
+            _context.SaveChanges();
+        }
+
+
+        public List<Pizza> GetPizzas()
+        {
+            var pizzas = _context.Pizzas.ToList();
+            if (pizzas == null || !pizzas.Any())
+            {
+                throw new InvalidOperationException("No pizzas found.");
+            }
+            return pizzas;
+        }
+
+
+
+        public Pizza GetPizzaById(int id)
+        {
+            var pizza = _context.Pizzas.Find(id);
+            if (pizza == null)
+            {
+                throw new KeyNotFoundException($"Pizza with ID {id} not found.");
+            }
+            return pizza;
+        }
+
+        public Task<List<Pizza>> GetPizzasAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Pizza?> IPizzaService.GetPizzaByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Pizza> IPizzaService.CreatePizzaAsync(Pizza pizza)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Pizza?> IPizzaService.UpdatePizzaAsync(int id, Pizza pizza)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IPizzaService.DeletePizzaAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
