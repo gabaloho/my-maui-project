@@ -1,19 +1,45 @@
-﻿namespace ContosoPizza.Services
+﻿// OrderService.cs
+using ContosoPizza.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace ContosoPizza.Services
 {
-    public static class OrderService
+    public class OrderService
     {
-        private static List<Models.Order> Orders = new();
+        private readonly ContosoPizzaDbContext _context;
 
-        public static List<Models.Order> GetOrders() => Orders;
-
-        public static Models.Order? GetById(int id) =>
-            Orders.FirstOrDefault(o => o.Id == id);
-
-        public static void AddOrder(Models.Order order)
+        public OrderService(ContosoPizzaDbContext context)
         {
-            order.Id = Orders.Count + 1;
-            order.OrderDate = DateTime.UtcNow;
-            Orders.Add(order);
+            _context = context;
+        }
+
+        public async Task<List<Order>> GetAllAsync() =>
+            await _context.Orders.Include(o => o.Items).ToListAsync();
+
+        public async Task<Order?> GetByIdAsync(string id) =>
+            await _context.Orders.Include(o => o.Items)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+        public async Task AddAsync(Order order)
+        {
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Order order)
+        {
+            _context.Entry(order).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            var order = await GetByIdAsync(id);
+            if (order != null)
+            {
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

@@ -1,0 +1,78 @@
+﻿@page "/"
+@using MudBlazor
+@using ContosoPizzaApp.Components.Models
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@attribute [StreamRendering]
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudText Typo="Typo.h4" GutterBottom="true">Our Pizzas</MudText>
+
+    @if (pizzas is null)
+    {
+        <MudProgressCircular Indeterminate="true" />
+    }
+    else
+    {
+        <MudGrid>
+            @foreach (var pizza in pizzas)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <MudCard>
+                        <MudCardMedia Image="@pizza.ImageUrl" Height="200" />
+                        <MudCardContent>
+                            <MudText Typo="Typo.h6">@pizza.Name</MudText>
+                            <MudText Typo="Typo.body2">@pizza.Description</MudText>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Primary">€@pizza.Price.ToString("F2")</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Color="Color.Primary" OnClick="@(() => AddToCart(pizza))">Add to Cart</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+
+        @if (cart.Any())
+        {
+            <MudPaper Class="mt-4 pa-4" Elevation="1">
+                <MudText Typo="Typo.h6">Cart (@cart.Count items)</MudText>
+                <MudList T="string" Dense="true">
+                    @foreach (var item in cart)
+                    {
+                        <MudListItem>@item.Name - €@item.Price.ToString("F2")</MudListItem>
+                    }
+                </MudList>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="GoToCheckout">Checkout</MudButton>
+            </MudPaper>
+        }
+    }
+</MudContainer>
+
+@code {
+    List<Pizza>? pizzas;
+    List<Pizza> cart = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            pizzas = await Http.GetFromJsonAsync<List<Pizza>>("api/pizzas");
+        }
+        catch (Exception ex)
+        {
+            // Log or handle the error (e.g., display an error message)
+            Console.WriteLine($"Error loading pizzas: {ex.Message}");
+        }
+    }
+
+    void AddToCart(Pizza pizza)
+    {
+        cart.Add(pizza);
+    }
+
+    void GoToCheckout()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+}

@@ -4,38 +4,66 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ContosoPizza.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class OrderController : ControllerBase
+    [Route("api/[controller]")]
+    public class OrdersController : ControllerBase
     {
-        // GET: api/order
-        [HttpGet]
-        public IActionResult GetOrders()
+        private readonly OrderService _orderService;
+
+        public OrdersController(OrderService orderService)
         {
-            var orders = OrderService.GetOrders();
+            _orderService = orderService;
+        }
+
+        // GET: api/orders
+        [HttpGet]
+        public async Task<ActionResult<List<Order>>> GetAll()
+        {
+            var orders = await _orderService.GetAllAsync();
             return Ok(orders);
         }
 
-        // GET: api/order/1
+        // GET: api/orders/{id}
         [HttpGet("{id}")]
-        public IActionResult GetOrderById(int id)
+        public async Task<ActionResult<Order>> GetById(string id)
         {
-            var order = OrderService.GetById(id);
-            if (order == null)
-                return NotFound();
-
+            var order = await _orderService.GetByIdAsync(id);
+            if (order == null) return NotFound();
             return Ok(order);
         }
 
-        // POST: api/order
+        // POST: api/orders
         [HttpPost]
-        public IActionResult CreateOrder([FromBody] Order order)
+        public async Task<ActionResult<Order>> Create([FromBody] Order order)
         {
-            if (order == null || order.Items.Count == 0)
-                return BadRequest("Invalid order");
+            if (order == null || order.Items == null || !order.Items.Any())
+                return BadRequest("Order must contain at least one item.");
 
-            OrderService.AddOrder(order);
-            return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, order);
+            await _orderService.AddAsync(order);
+            return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
+        }
+
+        // PUT: api/orders/{id}/status
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatus(string id, [FromBody] string newStatus)
+        {
+            var order = await _orderService.GetByIdAsync(id);
+            if (order == null) return NotFound();
+
+            order.Status = newStatus;
+            await _orderService.UpdateAsync(order);
+            return NoContent();
+        }
+
+        // DELETE: api/orders/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var order = await _orderService.GetByIdAsync(id);
+            if (order == null) return NotFound();
+
+            await _orderService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

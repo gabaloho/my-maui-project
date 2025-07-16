@@ -1,54 +1,48 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using ContosoPizza.Services;
+using ContosoPizza.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContosoPizza.Services
 {
-    public static class PizzaService
-    {
-        public static List<Models.Pizza> GetPizzas()
-        {
-            return new List<Models.Pizza>
-            {
-                new Models.Pizza
-                {
-                    Id = 1,
-                    Name = "Margherita",
-                    Description = "Classic pizza with tomato sauce, mozzarella cheese, and fresh basil.",
-                    Price = 8.99m,
-                    ImageUrl = "https://example.com/margherita.jpg",
-                    IsGlutenFree = false,
-                    IsVegetarian = true,
-                    IsVegan = false
-                },
-                new Models.Pizza
-                {
-                    Id = 2,
-                    Name = "Pepperoni",
-                    Description = "Spicy pepperoni slices with mozzarella cheese and tomato sauce.",
-                    Price = 9.99m,
-                    ImageUrl = "https://example.com/pepperoni.jpg",
-                    IsGlutenFree = false,
-                    IsVegetarian = false,
-                    IsVegan = false
-                },
 
-                new Models.Pizza
-                {
-                    Id = 3,
-                    Name = "BBQ Chicken",
-                    Description = "Grilled chicken, BBQ sauce, red onions, and cilantro.",
-                    Price = 10.99m,
-                    ImageUrl= "https://example.com/bbqchicken.jpg",
-                    IsGlutenFree = false,
-                    IsVegetarian = false,
-                    IsVegan = false
-                }
-            };
+    public class PizzaService
+    {
+        private readonly ContosoPizzaDbContext _context;
+
+        public PizzaService(ContosoPizzaDbContext context)
+        {
+            _context = context;
         }
 
-        public static Models.Pizza? GetPizzaById(int id)
+        public async Task<List<Pizza>> GetAllAsync() =>
+            await _context.Pizzas.ToListAsync();
+
+        public async Task<Pizza?> GetByIdAsync(string id) =>
+            await _context.Pizzas.FindAsync(id);
+
+        public async Task AddAsync(Pizza pizza)
         {
-            var pizzas = GetPizzas();
-            return pizzas.FirstOrDefault(p => p.Id == id);
+            _context.Pizzas.Add(pizza);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Pizza pizza)
+        {
+            _context.Entry(pizza).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            var pizza = await GetByIdAsync(id);
+            if (pizza != null)
+            {
+                _context.Pizzas.Remove(pizza);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

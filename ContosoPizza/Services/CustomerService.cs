@@ -1,32 +1,44 @@
-﻿namespace ContosoPizza.Services
+﻿using ContosoPizza.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace ContosoPizza.Services
 {
-    public static class CustomerService
+
+    public class CustomerService
     {
-        private static List<Models.Customer> Customers = new()
+        private readonly ContosoPizzaDbContext _context;
+
+        public CustomerService(ContosoPizzaDbContext context)
         {
-            new Models.Customer
+            _context = context;
+        }
+
+        public async Task<List<Customer>> GetAllAsync() =>
+            await _context.Customers.ToListAsync();
+
+        public async Task<Customer?> GetByIdAsync(string id) =>
+            await _context.Customers.FindAsync(id);
+
+        public async Task AddAsync(Customer customer)
+        {
+            _context.Customers.Add(customer);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Customer customer)
+        {
+            _context.Entry(customer).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            var customer = await GetByIdAsync(id);
+            if (customer != null)
             {
-                Id = 1,
-                FullName = "Alice Johnson",
-                Email = "alice@example.com",
-                PhoneNumber = "+32 123456789",
-                City = "Brussels",
-                PreferredStoreId = 1
-            },
-            new Models.Customer
-            {
-                Id = 2,
-                FullName = "Bob de Vries",
-                Email = "bob@example.com",
-                PhoneNumber = "+32 987654321",
-                City = "Antwerp",
-                PreferredStoreId = 2
+                _context.Customers.Remove(customer);
+                await _context.SaveChangesAsync();
             }
-        };
-
-        public static List<Models.Customer> GetCustomers() => Customers;
-
-        public static Models.Customer? GetById(int id) =>
-            Customers.FirstOrDefault(c => c.Id == id);
+        }
     }
 }
