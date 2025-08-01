@@ -20,6 +20,14 @@ namespace ContosoPizza.Services
         public DbSet<InventoryItem> InventoryItems { get; set; } = null!;
         public DbSet<StoreReview> StoreReviews { get; set; } = null!;
 
+        // Newly added models
+        public DbSet<Payment> Payments { get; set; } = null!;
+        public DbSet<Promotion> Promotions { get; set; } = null!;
+        public DbSet<Ingredient> Ingredients { get; set; } = null!;
+        public DbSet<AuditLog> AuditLogs { get; set; } = null!;
+        public DbSet<Session> Sessions { get; set; } = null!;
+        public DbSet<Notification> Notifications { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -31,7 +39,15 @@ namespace ContosoPizza.Services
             modelBuilder.Entity<InventoryItem>().ToCollection("inventoryitems");
             modelBuilder.Entity<Order>().ToCollection("orders");
             modelBuilder.Entity<Pizza>().ToCollection("pizzas");
-            modelBuilder.Entity<StoreReview>().ToCollection("reviews");
+            modelBuilder.Entity<StoreReview>().ToCollection("storereviews");
+
+            // Newly added models
+            modelBuilder.Entity<Payment>().ToCollection("payments");
+            modelBuilder.Entity<Promotion>().ToCollection("promotions");
+            modelBuilder.Entity<Ingredient>().ToCollection("ingredients");
+            modelBuilder.Entity<AuditLog>().ToCollection("auditlogs");
+            modelBuilder.Entity<Session>().ToCollection("sessions");
+            modelBuilder.Entity<Notification>().ToCollection("notifications");
         }
     }
 }

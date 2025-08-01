@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace ContosoPizza.Models
 {
+
     public class GeoJsonPolygon
     {
         [BsonElement("type")]
@@ -26,28 +27,33 @@ namespace ContosoPizza.Models
         public string EndTime { get; set; } = string.Empty;
     }
 
-    [Collection("deliveryzones")]
+    [Collection("deliveryZones")]
     public class DeliveryZone
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
+        public string Id { get; set; } = null!;
+
+        [BsonElement("storeId")]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string StoreId { get; set; } = null!;
 
         [BsonElement("name")]
         public string Name { get; set; } = string.Empty;
 
+        // Polygon coordinates for the delivery area (GeoJSON)
         [BsonElement("area")]
-        public GeoJsonPolygon Area { get; set; } = new GeoJsonPolygon();
+        public List<List<double>>? Area { get; set; }
 
-        [BsonElement("storeIds")]
-        public List<string> StoreIds { get; set; } = new();
+        // Or, if you use zip codes:
+        [BsonElement("zipCodes")]
+        public List<string>? ZipCodes { get; set; }
 
         [BsonElement("deliveryFee")]
-        public decimal? DeliveryFee { get; set; }  // Nullable to prevent missing field error
+        public decimal DeliveryFee { get; set; }
 
         [BsonElement("minimumOrderAmount")]
-        public decimal? MinimumOrderAmount { get; set; }  // Nullable for same reason
-
+        public decimal MinimumOrderAmount { get; set; }
         [BsonElement("deliveryTimeSlots")]
         public List<DeliveryTimeSlot> DeliveryTimeSlots { get; set; } = new();
     }

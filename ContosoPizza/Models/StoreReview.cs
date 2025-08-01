@@ -4,23 +4,30 @@ using MongoDB.EntityFrameworkCore;
 
 namespace ContosoPizza.Models
 {
-    [Collection("reviews")]
+    [Collection("storeReviews")]
     public class StoreReview
     {
-
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
+        public string Id { get; set; } = null!;
 
+        [BsonElement("storeId")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string StoreId { get; set; } 
+        public string StoreId { get; set; } = null!;
 
+        [BsonElement("customerId")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string CustomerId { get; set; } 
+        public string CustomerId { get; set; } = null!;
 
-        public int Rating { get; set; } // 1-5 stars
-        public string Comment { get; set; } = string.Empty;
-        public DateTime ReviewDate { get; set; } = DateTime.UtcNow;
+        [BsonElement("rating")]
+        public int Rating { get; set; } // 1-5
+
+        [BsonElement("comment")]
+        public string? Comment { get; set; }
+
+        [BsonElement("date")]
+        public DateTime Date { get; set; } = DateTime.UtcNow;
     }
+
 
 }

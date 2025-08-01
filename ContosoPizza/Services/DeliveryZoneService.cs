@@ -37,7 +37,7 @@ namespace ContosoPizza.Services
 
             existing.Name = updatedZone.Name;
             existing.Area = updatedZone.Area;
-            existing.StoreIds = updatedZone.StoreIds;
+            existing.StoreId = updatedZone.StoreId;
             existing.DeliveryFee = updatedZone.DeliveryFee;
             existing.MinimumOrderAmount = updatedZone.MinimumOrderAmount;
             existing.DeliveryTimeSlots = updatedZone.DeliveryTimeSlots;

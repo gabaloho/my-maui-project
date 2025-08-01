@@ -31,7 +31,7 @@ namespace ContosoPizza.Services
             var employee = await _context.Employees.FindAsync(id);
             if (employee is null) return false;
 
-            employee.FullName = updated.FullName;
+            employee.Name = updated.Name;
             employee.Role = updated.Role;
             employee.Email = updated.Email;
             employee.StoreId = updated.StoreId;

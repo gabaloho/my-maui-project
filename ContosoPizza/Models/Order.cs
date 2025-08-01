@@ -12,15 +12,17 @@ namespace ContosoPizza.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public string CustomerId { get; set; }
+        public string? CustomerId { get; set; }
+        [BsonIgnore]
         public Customer? Customer { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public string ContosoStoreId { get; set; }
-        public Stores? ContosoStore { get; set; }
+        public string? StoreId { get; set; }
+        [BsonIgnore]
+        public Stores? Store { get; set; }
 
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
@@ -28,16 +30,18 @@ namespace ContosoPizza.Models
 
         public List<OrderItem> Items { get; set; } = new();
 
-        public decimal TotalAmount => Items.Sum(i => i.Quantity * i.Price);
+        public decimal TotalAmount => Items.Sum(i => i.Quantity * i.PriceSnapshot);
     }
 
     public class OrderItem
     {
-        public string PizzaId { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? PizzaId { get; set; }
+        [BsonIgnore]
         public Pizza? Pizza { get; set; }
 
         public int Quantity { get; set; }
 
-        public decimal Price { get; set; } // price snapshot
+        public decimal PriceSnapshot { get; set; } // price at order time
     }
 }

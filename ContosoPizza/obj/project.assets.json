@@ -11770,11 +11770,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\GabrielAloho\\my-maui-project\\ContosoPizza\\ContosoPizza.csproj",
+      "projectUniqueName": "C:\\Users\\GabrielAloho\\source\\repos\\gabaloho\\my-maui-project1\\ContosoPizza\\ContosoPizza.csproj",
       "projectName": "ContosoPizza",
-      "projectPath": "C:\\Users\\GabrielAloho\\my-maui-project\\ContosoPizza\\ContosoPizza.csproj",
+      "projectPath": "C:\\Users\\GabrielAloho\\source\\repos\\gabaloho\\my-maui-project1\\ContosoPizza\\ContosoPizza.csproj",
       "packagesPath": "C:\\Users\\GabrielAloho\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\GabrielAloho\\my-maui-project\\ContosoPizza\\obj\\",
+      "outputPath": "C:\\Users\\GabrielAloho\\source\\repos\\gabaloho\\my-maui-project1\\ContosoPizza\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

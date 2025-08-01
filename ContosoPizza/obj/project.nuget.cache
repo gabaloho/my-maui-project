@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "1DfnIJ+JYeg=",
+  "dgSpecHash": "msCgxs0OsBM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\GabrielAloho\\my-maui-project\\ContosoPizza\\ContosoPizza.csproj",
+  "projectFilePath": "C:\\Users\\GabrielAloho\\source\\repos\\gabaloho\\my-maui-project1\\ContosoPizza\\ContosoPizza.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\GabrielAloho\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\GabrielAloho\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",

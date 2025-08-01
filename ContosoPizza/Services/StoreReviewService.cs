@@ -46,7 +46,7 @@ namespace ContosoPizza.Services
             existing.StoreId = review.StoreId;
             existing.Rating = review.Rating;
             existing.Comment = review.Comment;
-            existing.ReviewDate = review.ReviewDate;
+            existing.Date = review.Date;
 
             _context.StoreReviews.Update(existing);
             await _context.SaveChangesAsync();

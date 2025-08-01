@@ -74,5 +74,13 @@ namespace ContosoPizza.Models
 
         [BsonElement("pizzas")]
         public List<Pizza>? Pizzas { get; set; }
+
+        // Reference to employees working at this store
+        [BsonElement("employeeIds")]
+        public List<string> EmployeeIds { get; set; } = new();
+
+        // Optionally, for convenience, you can ignore this property in MongoDB and use it for navigation in code
+        [BsonIgnore]
+        public List<Employee>? Employees { get; set; }
     }
 }
